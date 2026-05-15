@@ -7,3 +7,4 @@ python-dotenv
 setuptools
 wheel
 matplotlib
+nltk
