@@ -4,8 +4,7 @@ import pandas as pd
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import plotly_express as px
-
+import plotly.express as px
 from kitconc.kit_corpus import Corpus
 
 st.set_page_config(layout="wide")
