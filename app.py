@@ -9,7 +9,7 @@ from kitconc.kit_corpus import Corpus
 
 st.set_page_config(layout="wide")
 
-st.title("Kitconc com Streamlit")
+st.title("Kitconc com streamlit")
 
 # ========================= CONFIG =========================
 
@@ -23,18 +23,19 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 with st.sidebar:
 
-    st.header("Upload do Corpus")
+    st.header("Corpus do corpus")
 
     uploaded_files = st.file_uploader(
-        "Escolha arquivos TXT",
+        "Escolha os arquivos",
         accept_multiple_files=True,
-        type=["txt"]
+        type=['txt']
     )
 
     if uploaded_files:
 
         # limpa arquivos antigos
         for file in os.listdir(UPLOAD_FOLDER):
+
             file_path = os.path.join(UPLOAD_FOLDER, file)
 
             if os.path.isfile(file_path):
@@ -57,59 +58,52 @@ CORPUS_READY = False
 
 try:
 
+    corpus = Corpus(
+        WORKSPACE,
+        CORPUS_NAME,
+        language='portuguese'
+    )
+
     if uploaded_files:
 
-        st.info("Processando corpus...")
+        with st.spinner("Processando corpus..."):
 
-        # remove corpus antigo
-        if os.path.exists(f"{WORKSPACE}/{CORPUS_NAME}"):
+            # remove corpus antigo
+            if os.path.exists(f"{WORKSPACE}/{CORPUS_NAME}"):
 
-            shutil.rmtree(f"{WORKSPACE}/{CORPUS_NAME}")
+                shutil.rmtree(
+                    f"{WORKSPACE}/{CORPUS_NAME}"
+                )
 
-        # recria corpus
-        corpus = Corpus(
-            WORKSPACE,
-            CORPUS_NAME,
-            language="portuguese"
-        )
-
-        # processa textos
-        corpus.add_texts(
-            UPLOAD_FOLDER,
-            verbose=True
-        )
-
-        # debug
-        st.write("Estrutura criada:")
-
-        for root, dirs, files in os.walk(WORKSPACE):
-
-            st.write(root)
-            st.write("Dirs:", dirs)
-            st.write("Files:", files)
-
-        # verifica se processamento terminou
-        npy_path = f"{WORKSPACE}/{CORPUS_NAME}/data/npy"
-
-        if os.path.exists(npy_path):
-
-            CORPUS_READY = True
-
-            st.success("Corpus processado corretamente!")
-
-        else:
-
-            st.error(
-                "Kitconc não criou a pasta data/npy."
+            # recria corpus
+            corpus = Corpus(
+                WORKSPACE,
+                CORPUS_NAME,
+                language='portuguese'
             )
 
-    else:
+            # processa textos
+            corpus.add_texts(
+                UPLOAD_FOLDER,
+                verbose=True
+            )
 
-        corpus = Corpus(
-            WORKSPACE,
-            CORPUS_NAME,
-            language="portuguese"
-        )
+            # verifica se criou npy
+            npy_path = f"{WORKSPACE}/{CORPUS_NAME}/data/npy"
+
+            if os.path.exists(npy_path):
+
+                CORPUS_READY = True
+
+                st.success(
+                    "Corpus processado corretamente!"
+                )
+
+            else:
+
+                st.error(
+                    "Erro ao criar índices do corpus."
+                )
 
 except Exception as e:
 
@@ -121,28 +115,53 @@ aba1, aba2, aba3, aba4, aba5, aba6 = st.tabs([
     "📊 Workspace",
     "📈 Wordlist",
     "⚙️ Keywords",
-    "📚 Kwic",
-    "📖 Concordance",
-    "🔗 Collocates"
+    "Kwic",
+    "Concordance",
+    "Collocates"
 ])
 
 # ========================= ABA 1 =========================
 
 with aba1:
 
-    st.header("Workspace")
+    with st.container(border=True):
 
-    st.markdown("""
-    Faça upload de arquivos TXT na barra lateral.
+        st.header("Wordspace")
 
-    O sistema irá criar automaticamente o corpus.
-    """)
+        st.markdown("""
+No kitconc, para realizar a criação de um corpus manipulável pela ferramenta, é preciso deﬁnir uma pasta de trabalho (workspace), um nome de identiﬁcação para o corpus e o idioma dos textos.
+
+É preciso também adicionar textos ao corpus criado por meio de uma pasta.
+
+Nas atividades desenvolvidas aqui, não se faz necessário criar nenhuma dessas pastas, pois elas são criadas automaticamente quando executamos esta interface.
+
+Confira na barra ao lado clicando no símbolo de uma pasta e você verá que há duas pastas Corpus, onde colocaremos os arquivos do nosso corpus, e a Workspace.
+""")
+
+        st.subheader("Carregue os arquivos")
+
+        st.markdown("""
+Inicialmente, envie arquivos .txt utilizando o menu lateral.
+""")
 
 # ========================= ABA 2 =========================
 
 with aba2:
 
     st.header("Wordlist")
+
+    st.markdown('''
+A ferramenta wordlist faz uma listagem ordenada por frequência de todas as formas (vocábulos) que ocorrem em um corpus.
+
+A partir da lista de frequência, é possível deﬁnir quais são as palavras mais relevantes para a análise do corpus.
+''')
+
+    st.markdown("""
+> Pesquise no google sobre as expressões:
+> **riqueza lexical (TTR - Type/Token Ratio)**,
+> **Densidade Lexical (DeL)** e
+> **Diversidade Lexical (DiL)** na linguística de corpus.
+""")
 
     btn_wordlist = st.button(
         "Create Wordlist",
@@ -166,15 +185,15 @@ with aba2:
 
                 figbar = px.bar(
                     wordlist.df.head(30),
-                    x="WORD",
-                    y="FREQUENCY",
+                    x='WORD',
+                    y='FREQUENCY',
                     title="Frequência das palavras"
                 )
 
                 figline = px.line(
                     wordlist.df.head(30),
-                    x="WORD",
-                    y="FREQUENCY",
+                    x='WORD',
+                    y='FREQUENCY',
                     title="Frequência das palavras"
                 )
 
@@ -195,7 +214,7 @@ with aba2:
         else:
 
             st.warning(
-                "Corpus não processado."
+                "Envie arquivos para processar o corpus."
             )
 
 # ========================= ABA 3 =========================
@@ -203,6 +222,12 @@ with aba2:
 with aba3:
 
     st.header("Keywords")
+
+    st.markdown("""
+O recorte pode ser feito a partir da extração de palavras-chave.
+
+Para tanto, há programas que realizam uma comparação estatística a partir das frequências observadas e esperadas das palavras de um corpus de estudo e um corpus de referência de língua geral.
+""")
 
     btn_keywords = st.button(
         "Create Keywords",
@@ -226,12 +251,25 @@ with aba3:
 
                 figbar = px.bar(
                     keywords.df.head(30),
-                    x="WORD",
-                    y="FREQUENCY"
+                    x='WORD',
+                    y='FREQUENCY',
+                    title="Frequência das palavras"
+                )
+
+                figline = px.line(
+                    keywords.df.head(30),
+                    x='WORD',
+                    y='FREQUENCY',
+                    title="Frequência das palavras"
                 )
 
                 st.plotly_chart(
                     figbar,
+                    use_container_width=True
+                )
+
+                st.plotly_chart(
+                    figline,
                     use_container_width=True
                 )
 
@@ -242,7 +280,7 @@ with aba3:
         else:
 
             st.warning(
-                "Corpus não processado."
+                "Envie arquivos para processar o corpus."
             )
 
 # ========================= ABA 4 =========================
@@ -251,8 +289,15 @@ with aba4:
 
     st.header("Kwic")
 
+    st.markdown('''
+A análise somente de listas de palavras não é suficiente para determinar os padrões de uso de itens lexicais.
+
+Esse propósito pode ser conseguido pela observação dos itens lexicais em seu contexto de uso.
+''')
+
     contextword = st.text_input(
-        "Palavra"
+        "Escreva uma palavra",
+        placeholder="Qual palavra você quer ver o contexto?"
     )
 
     btn_kwic = st.button(
@@ -289,7 +334,7 @@ with aba4:
         else:
 
             st.warning(
-                "Corpus não processado."
+                "Envie arquivos para processar o corpus."
             )
 
 # ========================= ABA 5 =========================
@@ -298,8 +343,13 @@ with aba5:
 
     st.header("Concordance")
 
+    st.markdown("""
+A concordância refere-se à listagem das ocorrências de uma palavra de busca em um corpus.
+""")
+
     concordanceword = st.text_input(
-        "Palavra para concordância"
+        "Escreva uma palavra",
+        placeholder="Qual palavra você quer ver a concordância?"
     )
 
     btn_concordance = st.button(
@@ -330,17 +380,22 @@ with aba5:
         else:
 
             st.warning(
-                "Corpus não processado."
+                "Envie arquivos para processar o corpus."
             )
 
 # ========================= ABA 6 =========================
 
 with aba6:
 
-    st.header("Collocates")
+    st.header("Find Collocates")
+
+    st.markdown('''
+A análise de colocados permite identificar padrões de associação entre palavras.
+''')
 
     collocateword = st.text_input(
-        "Palavra para colocação"
+        "Escreva o termo de busca",
+        placeholder="A colocação de qual palavra?"
     )
 
     btn_collocate = st.button(
@@ -368,13 +423,25 @@ with aba6:
 
                 figline = px.line(
                     collocates.df.head(20),
-                    x="WORD",
-                    y="ASSOCIATION",
-                    title="Associação"
+                    x='WORD',
+                    y='ASSOCIATION',
+                    title="Nível de associação"
+                )
+
+                figline2 = px.line(
+                    collocates.df.head(20),
+                    x='WORD',
+                    y='FREQUENCY',
+                    title="Nível de frequência"
                 )
 
                 st.plotly_chart(
                     figline,
+                    use_container_width=True
+                )
+
+                st.plotly_chart(
+                    figline2,
                     use_container_width=True
                 )
 
@@ -385,5 +452,5 @@ with aba6:
         else:
 
             st.warning(
-                "Corpus não processado."
+                "Envie arquivos para processar o corpus."
             )
