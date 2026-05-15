@@ -9,3 +9,4 @@ wheel
 matplotlib
 nltk
 pypdf
+xlsxwriter
