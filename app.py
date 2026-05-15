@@ -42,8 +42,11 @@ with st.sidebar:
 aba1, aba2, aba3, aba4,aba5,aba6 = st.tabs(["📊 Workspace", "📈 Wordlist", "⚙️ Keywords", "Kwic", "Concordance","Collocates"])
 
 corpus = Corpus("Workspace", "Corpus1", language='portuguese')
-corpus.add_texts(UPLOAD_FOLDER)
 
+if uploaded_files:
+    if not os.path.exists("Workspace/Corpus1/data/npy"):
+        corpus.add_texts(UPLOAD_FOLDER, verbose=True)
+        
 # 2. Adicionar conteúdo à primeira aba
 with aba1:
     with st.container(border=True):
