@@ -44,8 +44,19 @@ aba1, aba2, aba3, aba4,aba5,aba6 = st.tabs(["📊 Workspace", "📈 Wordlist", "
 corpus = Corpus("Workspace", "Corpus1", language='portuguese')
 
 if uploaded_files:
-    if not os.path.exists("Workspace/Corpus1/data/npy"):
+    try:
+        st.write("Processando corpus...")
+
         corpus.add_texts(UPLOAD_FOLDER, verbose=True)
+
+        st.success("Corpus processado!")
+
+        st.write(os.listdir("Workspace"))
+        st.write(os.listdir("Workspace/Corpus1"))
+        st.write(os.listdir("Workspace/Corpus1/data"))
+
+    except Exception as e:
+        st.error(f"Erro ao processar corpus: {e}")
         
 # 2. Adicionar conteúdo à primeira aba
 with aba1:
