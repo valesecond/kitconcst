@@ -61,7 +61,7 @@ A ferramenta wordlist faz uma listagem ordenada por frequência de todas as form
 ''')
     st.markdown(">Pesquise no google sobre as expressões: **riqueza lexical(TTR - Type/Token Ratio)**, **Densidade Lexical (DeL)** e **Diversidade Lexical (DiL)** na linguistica de corpus.")
     
-    btn_wordlist = st.button("Create Wordlist",width=200)
+    btn_wordlist = st.button("Create Wordlist", use_container_width=True)
     
     @st.cache_data
     def wordlistfunction():
@@ -84,7 +84,7 @@ with aba3:
     st.header("Keywords")
     st.markdown("O recorte pode ser feito a partir da extração de palavras-chave. Para tanto, há programas que realizam uma comparação estatística a partir das frequências observadas e esperadas das palavras de um corpus de estudo e um corpus de referência de língua geral (muito maior que o corpus de estudo) a ﬁm de identiﬁcar palavras que se destacam. O resultado da comparação retorna uma lista classiﬁcada pelo valor de uma fórmula estatística empregada (log-likelihood ou chi-square), em ordem decrescente, em que as principais palavras do corpus de estudo estarão no topo, geralmente palavras de conteúdo, em contraponto a uma lista de frequência em que as primeiras palavras são gramaticais.")
     
-    btn_keywords = st.button("Create Keywords",width=200)
+    btn_keywords = st.button("Create Keywords")
 
     @st.cache_data
     def keywordsfunction():
@@ -107,7 +107,7 @@ with aba4:
     
     contextword = st.text_input("Escreva uma palavra",placeholder="Qual palavra você quer ver o contexto?")
     
-    btn_kwic = st.button("Create context",width=200)
+    btn_kwic = st.button("Create context")
     
     @st.cache_data
     def kwicfunction():  
@@ -124,7 +124,7 @@ with aba4:
     if btn_kwic == True:
         kwicfunction()
     
-    btncollocation = st.button("Collocation in context", width=250)
+    btncollocation = st.button("Collocation in context")
     
     if btncollocation==True:
         collocationfuncion()
@@ -137,7 +137,7 @@ with aba5:
                 
     concordanceword = st.text_input("Escreva uma palavra",placeholder="Qual palavra você quer ver a concordância?")
     
-    btn_concordance = st.button("Create concordance",width=200)
+    btn_concordance = st.button("Create concordance")
     
     @st.cache_data
     def concordancefunction():
@@ -163,7 +163,7 @@ A análise somente de listas de palavras não é suﬁciente para determinar os 
                 
     collocateword = st.text_input("Escreva o termo de busca",placeholder="A colocação de qual palavra?")
     
-    btn_collocate = st.button("Create collocates",width=200)
+    btn_collocate = st.button("Create collocates")
     
     @st.cache_data
     def collocatesfunction():
