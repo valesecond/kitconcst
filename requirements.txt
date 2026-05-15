@@ -12,4 +12,3 @@ pypdf
 xlsxwriter
 scipy
 statsmodels
-kitconc
